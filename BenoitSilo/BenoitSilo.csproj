@@ -9,4 +9,9 @@
     <PackageReference Include="Microsoft.Orleans.Server" Version="2.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BenoitGrains\BenoitGrains.csproj" />
+    <ProjectReference Include="..\BenoitGrainInterfaces\BenoitGrainInterfaces.csproj" />
+  </ItemGroup>
+
 </Project>
