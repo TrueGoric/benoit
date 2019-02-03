@@ -42,10 +42,5 @@ namespace BenoitGrains
 
             return Task.FromResult(values);
         }
-
-        private double Lerp(double first, double second, double by)
-        {
-            return first * (1 - by) + second * by;
-        }
     }
 }
