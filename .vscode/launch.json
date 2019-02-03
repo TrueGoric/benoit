@@ -1,0 +1,46 @@
+{
+   // Use IntelliSense to find out which attributes exist for C# debugging
+   // Use hover for the description of the existing attributes
+   // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+   
+   // Multiple projects under one solution:
+   // https://elanderson.net/2018/04/run-multiple-projects-in-visual-studio-code/
+   "version": "0.2.0",
+   "configurations": [
+        {
+            "name": "Client Launch",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "buildClient",
+            
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/BenoitClient/bin/Debug/netcoreapp2.2/BenoitClient.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/BenoitClient",
+            // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
+            "console": "externalTerminal",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": "Server Launch",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "buildServer",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/BenoitSilo/bin/Debug/netcoreapp2.2/BenoitSilo.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/BenoitSilo",
+            // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
+            "console": "externalTerminal",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
+        }
+    ,]
+}
