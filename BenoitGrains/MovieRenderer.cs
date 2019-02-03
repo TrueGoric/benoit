@@ -35,7 +35,7 @@ namespace BenoitGrains
                 readyFrames[i] = rendererTasks[i].Result;
             }
 
-            return frames;
+            return readyFrames;
         }
     }
 }
