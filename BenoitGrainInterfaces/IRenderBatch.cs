@@ -9,6 +9,6 @@ namespace BenoitGrainInterfaces
     public interface IRenderBatch<TExport> : IGrainWithGuidKey
         where TExport : IConvertible
     {
-        TExport[] Compute(RenderingOptions options, Complex[] coordinates);
+        Task<TExport[]> Compute(RenderingOptions options, Complex[] coordinates);
     }
 }
