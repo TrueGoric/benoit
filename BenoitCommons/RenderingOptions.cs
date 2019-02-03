@@ -23,5 +23,10 @@ namespace BenoitCommons
         /// The absolute value that specifies the divergence threshold from the magnitude.
         /// </summary>
         public int BailoutValue { get; set; } = 1 << 8;
+
+        /// <summary>
+        /// Specifies how many pixels should be rendered in a single batch.
+        /// </summary>
+        public int BatchSize { get; set; } = 100;
     }
 }
