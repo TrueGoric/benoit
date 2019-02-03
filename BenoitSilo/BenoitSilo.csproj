@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BenoitGrains\BenoitGrains.csproj" />
     <ProjectReference Include="..\BenoitGrainInterfaces\BenoitGrainInterfaces.csproj" />
+    <ProjectReference Include="..\BenoitCommons\BenoitCommons.csproj" />
   </ItemGroup>
 
 </Project>

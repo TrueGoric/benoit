@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BenoitGrainInterfaces", "Be
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BenoitGrains", "BenoitGrains\BenoitGrains.csproj", "{8A0ED4A1-10A2-4C18-8D7A-8F21EB6BAD65}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BenoitCommons", "BenoitCommons\BenoitCommons.csproj", "{3E73A836-F701-4F0D-856E-11F31B279A9A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,5 +74,17 @@ Global
 		{8A0ED4A1-10A2-4C18-8D7A-8F21EB6BAD65}.Release|x64.Build.0 = Release|Any CPU
 		{8A0ED4A1-10A2-4C18-8D7A-8F21EB6BAD65}.Release|x86.ActiveCfg = Release|Any CPU
 		{8A0ED4A1-10A2-4C18-8D7A-8F21EB6BAD65}.Release|x86.Build.0 = Release|Any CPU
+		{3E73A836-F701-4F0D-856E-11F31B279A9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E73A836-F701-4F0D-856E-11F31B279A9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E73A836-F701-4F0D-856E-11F31B279A9A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3E73A836-F701-4F0D-856E-11F31B279A9A}.Debug|x64.Build.0 = Debug|Any CPU
+		{3E73A836-F701-4F0D-856E-11F31B279A9A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3E73A836-F701-4F0D-856E-11F31B279A9A}.Debug|x86.Build.0 = Debug|Any CPU
+		{3E73A836-F701-4F0D-856E-11F31B279A9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E73A836-F701-4F0D-856E-11F31B279A9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E73A836-F701-4F0D-856E-11F31B279A9A}.Release|x64.ActiveCfg = Release|Any CPU
+		{3E73A836-F701-4F0D-856E-11F31B279A9A}.Release|x64.Build.0 = Release|Any CPU
+		{3E73A836-F701-4F0D-856E-11F31B279A9A}.Release|x86.ActiveCfg = Release|Any CPU
+		{3E73A836-F701-4F0D-856E-11F31B279A9A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
