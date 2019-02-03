@@ -12,7 +12,7 @@ namespace BenoitSilo
 {
     class Program
     {
-        static async void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Console.WriteLine("Starting Benoit silo...");
             var host = await StartSilo();
