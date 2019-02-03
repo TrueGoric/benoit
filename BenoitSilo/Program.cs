@@ -38,7 +38,8 @@ namespace BenoitSilo
                 .Configure<EndpointOptions>(o => o.AdvertisedIPAddress = IPAddress.Loopback)
                 .ConfigureLogging(l => l.AddConsole())
                 .ConfigureApplicationParts(parts => parts
-                    .AddApplicationPart(typeof(RenderingDispatcher<int>).Assembly).WithReferences());
+                    .AddApplicationPart(typeof(RenderingDispatcher<int>).Assembly).WithReferences())
+                .AddMemoryGrainStorage("BenoitStorage", o => o.NumStorageGrains = 10);
                 
             var silo = builder.Build();
             
