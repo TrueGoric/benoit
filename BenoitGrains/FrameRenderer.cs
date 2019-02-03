@@ -24,7 +24,7 @@ namespace BenoitGrains
 
             for (int i = 0; i < batchCount; i++)
             {
-                var newBatch = GrainFactory.GetGrain<IRenderBatch<TExport>>(Guid.Empty);
+                var newBatch = GrainFactory.GetGrain<IRenderBatch<TExport>>(Guid.NewGuid());
 
                 var startPoint = i * options.BatchSize;
                 var count = Math.Min(options.BatchSize, frame.Raw.Length - startPoint);
