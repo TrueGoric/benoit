@@ -13,7 +13,7 @@ namespace BenoitGrains
         public Task<TExport[]> Compute(RenderingOptions options, Complex[] coordinates)
         {
             var bailout = options.BailoutValue * options.BailoutValue;
-            var maxIteration = options.MaxIteration + 1;
+            var maxIteration = options.MaxIteration;
 
             var values = new TExport[coordinates.Length];
 
@@ -31,8 +31,9 @@ namespace BenoitGrains
                     if (tempVal == newVal)
                     {
                         i = maxIteration - 1;
-                        break;
                     }
+
+                    newVal = tempVal;
 
                     ++i;
                 }
