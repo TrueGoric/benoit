@@ -3,6 +3,7 @@ using System.Collections;
 
 namespace BenoitCommons
 {
+    [Serializable]
     public sealed class Map2D<T> : I2DMap<T>
         where T: IConvertible
     {

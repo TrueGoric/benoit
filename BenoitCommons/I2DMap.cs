@@ -1,7 +1,9 @@
 using System;
+using Orleans.CodeGeneration;
 
 namespace BenoitCommons
 {
+    [KnownBaseType]
     public interface I2DMap<T>
         where T: IConvertible
     {
