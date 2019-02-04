@@ -10,7 +10,7 @@ namespace BenoitGrains
     public class FrameRenderer<TExport> : Grain, IFrameRenderer<TExport>
         where TExport : IConvertible
     {
-        public Task<I2DMap<TExport>> RenderFrame(RenderingOptions options, Complex center, double scale)
+        public async Task<I2DMap<TExport>> RenderFrame(RenderingOptions options, Complex center, double scale)
         {
             // Prepare a frame to return
             var frame = new Map2D<TExport>(options.FrameWidth, options.FrameHeight);
@@ -35,7 +35,8 @@ namespace BenoitGrains
             }
 
             // Wait for the workers to finish
-            Task.WaitAll(batchTasks); // TODO: exception handling
+            var combinedTask = Task.WhenAll(batchTasks); // TODO: exception handling
+            await combinedTask;
 
             // Import the results...
             for (int i = 0; i < batchCount; i++)
@@ -46,7 +47,7 @@ namespace BenoitGrains
             }
             
             // ... and send them back to the requestor.
-            return Task.FromResult((I2DMap<TExport>)frame);
+            return frame;
         }
 
         private Complex[] PrepareInitialValues(int pixelWidth, int pixelHeight, Complex center, double scale)
