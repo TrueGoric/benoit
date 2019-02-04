@@ -9,6 +9,6 @@ namespace BenoitGrainInterfaces
     public interface IFrameRenderer<TExport> : IGrainWithGuidKey
         where TExport : IConvertible
     {
-        Task<I2DMap<TExport>> RenderFrame(RenderingOptions options, Complex center, double scale);
+        Task<Map2D<TExport>> RenderFrame(RenderingOptions options, Complex center, double scale);
     }
 }

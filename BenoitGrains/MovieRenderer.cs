@@ -10,9 +10,9 @@ namespace BenoitGrains
     public class MovieRenderer<TExport> : Grain, IMovieRenderer<TExport>
         where TExport : IConvertible
     {
-        public async Task<I2DMap<TExport>[]> Render(RenderingOptions options, Complex center, double scale, double scaleMultiplier, int frames)
+        public async Task<Map2D<TExport>[]> Render(RenderingOptions options, Complex center, double scale, double scaleMultiplier, int frames)
         {
-            var rendererTasks = new Task<I2DMap<TExport>>[frames];
+            var rendererTasks = new Task<Map2D<TExport>>[frames];
             var currentScale = scale;
 
             // Render all frames
@@ -28,7 +28,7 @@ namespace BenoitGrains
             var combinedTask = Task.WhenAll(rendererTasks);
             await combinedTask; // TODO: exception handling
 
-            var readyFrames = new I2DMap<TExport>[frames];
+            var readyFrames = new Map2D<TExport>[frames];
 
             for (int i = 0; i < frames; i++)
             {

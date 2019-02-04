@@ -10,7 +10,7 @@ namespace BenoitGrains
     public class FrameRenderer<TExport> : Grain, IFrameRenderer<TExport>
         where TExport : IConvertible
     {
-        public async Task<I2DMap<TExport>> RenderFrame(RenderingOptions options, Complex center, double scale)
+        public async Task<Map2D<TExport>> RenderFrame(RenderingOptions options, Complex center, double scale)
         {
             // Prepare a frame to return
             var frame = new Map2D<TExport>(options.FrameWidth, options.FrameHeight);

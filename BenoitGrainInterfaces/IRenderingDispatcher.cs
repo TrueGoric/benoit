@@ -12,7 +12,7 @@ namespace BenoitGrainInterfaces
         Task SetOptions(RenderingOptions options);
         Task<RenderingOptions> GetOptions();
         
-        Task<I2DMap<TExport>> RenderFrame(Complex center, double scale);
-        Task<I2DMap<TExport>[]> RenderMovie(Complex center, double scale, double scaleMultiplier, int frames);
+        Task<Map2D<TExport>> RenderFrame(Complex center, double scale);
+        Task<Map2D<TExport>[]> RenderMovie(Complex center, double scale, double scaleMultiplier, int frames);
     }
 }
