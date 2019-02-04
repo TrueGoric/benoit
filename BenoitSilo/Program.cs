@@ -35,11 +35,11 @@ namespace BenoitSilo
                     o.ClusterId = "dev";
                     o.ServiceId = "Benoit";
                 })
-                .Configure<EndpointOptions>(o => o.AdvertisedIPAddress = IPAddress.Loopback)
+                //.Configure<EndpointOptions>(o => o.AdvertisedIPAddress = IPAddress.Loopback)
                 .ConfigureLogging(l => l.AddConsole())
                 .ConfigureApplicationParts(parts => parts
                     .AddApplicationPart(typeof(RenderingDispatcher<int>).Assembly).WithReferences())
-                .AddMemoryGrainStorage("BenoitStorage", o => o.NumStorageGrains = 10);
+                .AddMemoryGrainStorage("OptionsStorage", o => o.NumStorageGrains = 10);
                 
             var silo = builder.Build();
             

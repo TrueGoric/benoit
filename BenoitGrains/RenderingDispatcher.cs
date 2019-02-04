@@ -1,13 +1,14 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Numerics;
 using System.Threading.Tasks;
 using Orleans;
+using Orleans.Providers;
 using BenoitCommons;
 using BenoitGrainInterfaces;
 
 namespace BenoitGrains
 {
+    [StorageProvider(ProviderName = "OptionsStorage")]
     public class RenderingDispatcher<TExport> : Grain<RenderingOptions>, IRenderingDispatcher<TExport>
         where TExport : IConvertible
     {
