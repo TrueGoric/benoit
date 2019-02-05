@@ -10,7 +10,7 @@ namespace BenoitGrainInterfaces
     public interface IRenderObserver<TExport> : IGrainObserver
         where TExport : IConvertible
     {
-        void ReceiveRenderedFrame(Immutable<Map2D<TExport>> frame);
-        void ReceiveRenderedMovie(Immutable<Map2D<TExport>[]> movie);
+        void ReceiveRenderedFrame(Guid requestIdentifier, Immutable<Map2D<TExport>> frame);
+        void ReceiveRenderedMovie(Guid requestIdentifier, Immutable<Map2D<TExport>[]> movie);
     }
 }
