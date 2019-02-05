@@ -33,7 +33,9 @@ namespace BenoitClient
             {
                 FrameWidth = 350,
                 FrameHeight = 200,
-                BatchSize = 10000
+                BatchSize = 10000,
+                BailoutValue = 1 << 12,
+                MaxIteration = 10000
             };
 
             // Frame options
@@ -41,8 +43,8 @@ namespace BenoitClient
             var scale = 0.01d;
 
             // Zoom options
-            var frames = 10;
-            var scaleMultiplier = 0.7d; // < 1 will magnify, > 1 will zoom out.
+            var frames = 200;
+            var scaleMultiplier = 0.8d; // < 1 will magnify, > 1 will zoom out.
 
             var dispatcher = client.GetGrain<IRenderingDispatcher<int>>(Guid.NewGuid());
             await dispatcher.SetOptions(options);
@@ -55,7 +57,7 @@ namespace BenoitClient
                 // var rendered = await dispatcher.RenderFrame(center, scale);
                 // SaveFrame(path, options, rendered);
                 var renderedMovie = await dispatcher.RenderMovie(center, scale, scaleMultiplier, frames);
-                SaveMovie(path, options, renderedMovie);
+                SaveMovie(path, options, renderedMovie.Value);
             }
             catch (Exception e)
             {
@@ -138,7 +140,7 @@ namespace BenoitClient
 
                     var metaData = frame.MetaData.GetFormatMetaData(GifFormat.Instance);
 
-                    metaData.FrameDelay = 8;
+                    metaData.FrameDelay = 12;
                 }
 
                 movie.Frames.RemoveFrame(0);
