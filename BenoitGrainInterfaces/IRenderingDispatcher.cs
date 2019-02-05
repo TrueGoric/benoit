@@ -2,6 +2,7 @@
 using System.Numerics;
 using System.Threading.Tasks;
 using Orleans;
+using Orleans.Concurrency;
 using BenoitCommons;
 
 namespace BenoitGrainInterfaces
@@ -12,7 +13,7 @@ namespace BenoitGrainInterfaces
         Task SetOptions(RenderingOptions options);
         Task<RenderingOptions> GetOptions();
         
-        Task<Map2D<TExport>> RenderFrame(Complex center, double scale);
-        Task<Map2D<TExport>[]> RenderMovie(Complex center, double scale, double scaleMultiplier, int frames);
+        Task<Immutable<Map2D<TExport>>> RenderFrame(Complex center, double scale);
+        Task<Immutable<Map2D<TExport>[]>> RenderMovie(Complex center, double scale, double scaleMultiplier, int frames);
     }
 }

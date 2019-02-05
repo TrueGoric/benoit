@@ -2,6 +2,7 @@ using System;
 using System.Numerics;
 using System.Threading.Tasks;
 using Orleans;
+using Orleans.Concurrency;
 using BenoitCommons;
 using BenoitGrainInterfaces;
 
@@ -10,7 +11,7 @@ namespace BenoitGrains
     public class RenderBatch<TExport> : Grain, IRenderBatch<TExport>
         where TExport : IConvertible
     {
-        public Task<TExport[]> Compute(RenderingOptions options, Complex[] coordinates)
+        public Task<Immutable<TExport[]>> Compute(RenderingOptions options, Complex[] coordinates)
         {
             var bailout = options.BailoutValue * options.BailoutValue;
             var maxIteration = options.MaxIteration;
@@ -41,7 +42,7 @@ namespace BenoitGrains
                 values[n] = (TExport)Convert.ChangeType(i, typeof(TExport));
             }
 
-            return Task.FromResult(values);
+            return Task.FromResult(new Immutable<TExport[]>(values));
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Numerics;
 using System.Threading.Tasks;
 using Orleans;
+using Orleans.Concurrency;
 using BenoitCommons;
 using BenoitGrainInterfaces;
 
@@ -10,7 +11,7 @@ namespace BenoitGrains
     public class FrameRenderer<TExport> : Grain, IFrameRenderer<TExport>
         where TExport : IConvertible
     {
-        public async Task<Map2D<TExport>> RenderFrame(RenderingOptions options, Complex center, double scale)
+        public async Task<Immutable<Map2D<TExport>>> RenderFrame(RenderingOptions options, Complex center, double scale)
         {
             // Prepare a frame to return
             var frame = new Map2D<TExport>(options.FrameWidth, options.FrameHeight);
@@ -20,7 +21,7 @@ namespace BenoitGrains
 
             // Compute in batches
             var batchCount = (int)Math.Ceiling(frame.Raw.Length / (double)options.BatchSize);
-            var batchTasks = new Task<TExport[]>[batchCount];
+            var batchTasks = new Task<Immutable<TExport[]>>[batchCount];
 
             for (int i = 0; i < batchCount; i++)
             {
@@ -43,11 +44,11 @@ namespace BenoitGrains
             {
                 var startPoint = i * options.BatchSize;
                 
-                batchTasks[i].Result.CopyTo(frame.Raw, startPoint);
+                batchTasks[i].Result.Value.CopyTo(frame.Raw, startPoint);
             }
             
             // ... and send them back to the requestor.
-            return frame;
+            return new Immutable<Map2D<TExport>>(frame);
         }
 
         private Complex[] PrepareInitialValues(int pixelWidth, int pixelHeight, Complex center, double scale)

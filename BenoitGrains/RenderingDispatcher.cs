@@ -2,6 +2,7 @@
 using System.Numerics;
 using System.Threading.Tasks;
 using Orleans;
+using Orleans.Concurrency;
 using Orleans.Providers;
 using BenoitCommons;
 using BenoitGrainInterfaces;
@@ -26,7 +27,7 @@ namespace BenoitGrains
             return Task.FromResult(State);
         }
 
-        public async Task<Map2D<TExport>> RenderFrame(Complex center, double scale)
+        public async Task<Immutable<Map2D<TExport>>> RenderFrame(Complex center, double scale)
         {
             if (_frameRenderer == null)
             {
@@ -36,7 +37,7 @@ namespace BenoitGrains
             return await _frameRenderer.RenderFrame(State, center, scale);
         }
 
-        public async Task<Map2D<TExport>[]> RenderMovie(Complex center, double scale, double scaleMultiplier, int frames)
+        public async Task<Immutable<Map2D<TExport>[]>> RenderMovie(Complex center, double scale, double scaleMultiplier, int frames)
         {
             if (_movieRenderer == null)
             {

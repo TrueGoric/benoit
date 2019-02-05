@@ -2,6 +2,7 @@ using System;
 using System.Numerics;
 using System.Threading.Tasks;
 using Orleans;
+using Orleans.Concurrency;
 using BenoitCommons;
 using BenoitGrainInterfaces;
 
@@ -10,9 +11,9 @@ namespace BenoitGrains
     public class MovieRenderer<TExport> : Grain, IMovieRenderer<TExport>
         where TExport : IConvertible
     {
-        public async Task<Map2D<TExport>[]> Render(RenderingOptions options, Complex center, double scale, double scaleMultiplier, int frames)
+        public async Task<Immutable<Map2D<TExport>[]>> Render(RenderingOptions options, Complex center, double scale, double scaleMultiplier, int frames)
         {
-            var rendererTasks = new Task<Map2D<TExport>>[frames];
+            var rendererTasks = new Task<Immutable<Map2D<TExport>>>[frames];
             var currentScale = scale;
 
             // Render all frames
@@ -32,10 +33,10 @@ namespace BenoitGrains
 
             for (int i = 0; i < frames; i++)
             {
-                readyFrames[i] = rendererTasks[i].Result;
+                readyFrames[i] = rendererTasks[i].Result.Value;
             }
 
-            return readyFrames;
+            return new Immutable<Map2D<TExport>[]>(readyFrames);
         }
     }
 }
