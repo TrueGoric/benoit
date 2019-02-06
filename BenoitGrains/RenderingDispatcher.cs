@@ -9,12 +9,18 @@ using BenoitGrainInterfaces;
 
 namespace BenoitGrains
 {
+    [Reentrant]
     [StorageProvider(ProviderName = "OptionsStorage")]
     public class RenderingDispatcher<TExport> : Grain<RenderingOptions>, IRenderingDispatcher<TExport>
         where TExport : IConvertible
     {
-        private IFrameRenderer<TExport> _frameRenderer;
-        private IMovieRenderer<TExport> _movieRenderer;
+        #region Private Fields
+
+        private GrainObserverManager<IRenderObserver<TExport>> _observerManager;
+
+        #endregion
+
+        #region IRenderingDispatcher<TExport> implementation
 
         public Task SetOptions(RenderingOptions options)
         {
@@ -26,32 +32,67 @@ namespace BenoitGrains
         {            
             return Task.FromResult(State);
         }
-
-        public async Task<Immutable<Map2D<TExport>>> RenderFrame(Complex center, double scale)
+        
+        public Task<bool> BeginRenderFrame(Guid requestIdentifier, Complex center, double scale)
         {
-            if (_frameRenderer == null)
-            {
-                _frameRenderer = GrainFactory.GetGrain<IFrameRenderer<TExport>>(Guid.NewGuid());
-            }
+            DispatchRenderFrame(requestIdentifier, center, scale);
 
-            return await _frameRenderer.RenderFrame(State, center, scale);
+            return Task.FromResult(true);
         }
 
-        public async Task<Immutable<Map2D<TExport>[]>> RenderMovie(Complex center, double scale, double scaleMultiplier, int frames)
+        public Task<bool> BeginRenderMovie(Guid requestIdentifier, Complex center, double scale, double scaleMultiplier, int frames)
         {
-            if (_movieRenderer == null)
-            {
-                _movieRenderer = GrainFactory.GetGrain<IMovieRenderer<TExport>>(Guid.NewGuid());
-            }
+            DispatchRenderMovie(requestIdentifier, center, scale, scaleMultiplier, frames);
 
-            return await _movieRenderer.Render(State, center, scale, scaleMultiplier, frames);
+            return Task.FromResult(true);
         }
 
         public override Task OnActivateAsync()
         {
             State = new RenderingOptions();
 
+            _observerManager = new GrainObserverManager<IRenderObserver<TExport>>();
+            _observerManager.ExpirationDuration = new TimeSpan(1, 0, 0); // 1 hour
+
             return base.OnActivateAsync();
         }
+
+        public Task Subscribe(IRenderObserver<TExport> observer)
+        {
+            _observerManager.Subscribe(observer);
+
+            return Task.CompletedTask;
+        }
+
+        public Task Unsubscribe(IRenderObserver<TExport> observer)
+        {
+            _observerManager.Unsubscribe(observer);
+
+            return Task.CompletedTask;
+        }
+
+        #endregion
+
+        #region Private Dispatcher Methods
+
+        private async Task DispatchRenderFrame(Guid requestIdentifier, Complex center, double scale)
+        {
+            var frameRenderer = GrainFactory.GetGrain<IFrameRenderer<TExport>>(Guid.NewGuid());
+
+            var rendered = await frameRenderer.RenderFrame(State, center, scale);
+
+            _observerManager.Notify(o => o.ReceiveRenderedFrame(requestIdentifier, rendered));
+        }
+
+        private async Task DispatchRenderMovie(Guid requestIdentifier, Complex center, double scale, double scaleMultiplier, int frames)
+        {
+            var movieRenderer = GrainFactory.GetGrain<IMovieRenderer<TExport>>(Guid.NewGuid());
+            
+            var rendered = await movieRenderer.Render(State, center, scale, scaleMultiplier, frames);
+
+            _observerManager.Notify(o => o.ReceiveRenderedMovie(requestIdentifier, rendered));
+        }
+
+        #endregion
     }
 }

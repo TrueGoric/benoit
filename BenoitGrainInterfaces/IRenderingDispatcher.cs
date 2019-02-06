@@ -13,7 +13,13 @@ namespace BenoitGrainInterfaces
         Task SetOptions(RenderingOptions options);
         Task<RenderingOptions> GetOptions();
         
-        Task<Immutable<Map2D<TExport>>> RenderFrame(Complex center, double scale);
-        Task<Immutable<Map2D<TExport>[]>> RenderMovie(Complex center, double scale, double scaleMultiplier, int frames);
+        [AlwaysInterleave]
+        Task<bool> BeginRenderFrame(Guid requestIdentifier, Complex center, double scale);
+
+        [AlwaysInterleave]
+        Task<bool> BeginRenderMovie(Guid requestIdentifier, Complex center, double scale, double scaleMultiplier, int frames);
+    
+        Task Subscribe(IRenderObserver<TExport> observer);
+        Task Unsubscribe(IRenderObserver<TExport> observer);
     }
 }
