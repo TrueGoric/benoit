@@ -33,9 +33,22 @@ namespace BenoitClient
             {
                 FrameWidth = 350,
                 FrameHeight = 200,
-                BatchSize = 10000,
+                BatchSize = 2000,
                 BailoutValue = 1 << 12,
                 MaxIteration = 10000
+            };
+
+            PrintOptions(options);
+
+            var observer = new RenderObserver();
+            observer.OnReceivedRenderedMovie += (guid, movie) =>
+            {
+                SaveMovie($"{guid.ToString()}.gif", options, movie.Value);
+            };
+
+            observer.OnReceivedRenderedFrame += (guid, frame) =>
+            {
+                SaveFrame($"{guid.ToString()}.png", options, frame.Value);
             };
 
             // Frame options
@@ -49,21 +62,14 @@ namespace BenoitClient
             var dispatcher = client.GetGrain<IRenderingDispatcher<int>>(Guid.NewGuid());
             await dispatcher.SetOptions(options);
 
-            Console.Write("Where to save: ");
-            var path = Console.ReadLine();
+            var observerRef = await client.CreateObjectReference<IRenderObserver<int>>(observer);
+            await dispatcher.Subscribe(observerRef);
 
-            try
-            {
-                // var rendered = await dispatcher.RenderFrame(center, scale);
-                // SaveFrame(path, options, rendered);
-                var renderedMovie = await dispatcher.RenderMovie(center, scale, scaleMultiplier, frames);
-                SaveMovie(path, options, renderedMovie.Value);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                return;
-            }
+            //await dispatcher.BeginRenderMovie(Guid.NewGuid(), center, scale, scaleMultiplier, frames);
+            await dispatcher.BeginRenderFrame(Guid.NewGuid(), center, scale);
+
+            Console.WriteLine("Awaiting response from the server... (Enter to cancel)");
+            Console.ReadLine();
 
             await client.Close();
         }
@@ -105,6 +111,8 @@ namespace BenoitClient
 
         static void SaveFrame(string path, RenderingOptions options, I2DMap<int> map)
         {
+            Console.WriteLine($"Saving frame to {path}...");
+
             using (Image<Gray16> image = new Image<Gray16>(map.Width, map.Height))
             {
                 for (int y = 0; y < map.Height; y++)
@@ -118,10 +126,14 @@ namespace BenoitClient
                 using (var file = File.Open(path, FileMode.Create))
                     image.SaveAsPng(file);
             }
+
+            Console.WriteLine("Successfully saved!");
         }
 
         static void SaveMovie(string path, RenderingOptions options, I2DMap<int>[] maps)
         {
+            Console.WriteLine($"Saving movie to {path}...");
+
             using (Image<Gray16> movie = new Image<Gray16>(options.FrameWidth, options.FrameHeight))
             {
                 for (int i = 0; i < maps.Length; i++)
@@ -134,6 +146,7 @@ namespace BenoitClient
                     {
                         for (int x = 0; x < map.Width; x++)
                         {
+            Console.WriteLine("Successfully saved!");
                             frame[x, y] = new Gray16((ushort)Lerp(ushort.MaxValue, 0, map[x, y] / (double)options.MaxIteration));
                         }
                     }
@@ -148,6 +161,8 @@ namespace BenoitClient
                 using (var file = File.Open(path, FileMode.Create))
                     movie.SaveAsGif(file);
             }
+            
+            Console.WriteLine("Successfully saved!");
         }
 
         static double Lerp(double first, double second, double by)
