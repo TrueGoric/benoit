@@ -35,6 +35,11 @@ namespace BenoitSilo
                     o.ClusterId = "dev";
                     o.ServiceId = "Benoit";
                 })
+                .Configure<SiloMessagingOptions>(o =>
+                {
+                    o.ResponseTimeout = TimeSpan.FromMinutes(10);
+                    o.ResponseTimeoutWithDebugger = TimeSpan.FromMinutes(10);
+                })
                 //.Configure<EndpointOptions>(o => o.AdvertisedIPAddress = IPAddress.Loopback)
                 .ConfigureLogging(l => l.AddConsole())
                 .ConfigureApplicationParts(parts => parts
