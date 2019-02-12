@@ -146,7 +146,6 @@ namespace BenoitClient
                     {
                         for (int x = 0; x < map.Width; x++)
                         {
-            Console.WriteLine("Successfully saved!");
                             frame[x, y] = new Gray16((ushort)Lerp(ushort.MaxValue, 0, map[x, y] / (double)options.MaxIteration));
                         }
                     }
