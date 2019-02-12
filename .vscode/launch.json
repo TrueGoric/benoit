@@ -12,6 +12,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "buildClient",
+            "justMyCode": false,
             
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/BenoitClient/bin/Debug/netcoreapp2.2/BenoitClient.dll",
@@ -27,6 +28,8 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "buildServer",
+            "justMyCode": false,
+            
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/BenoitSilo/bin/Debug/netcoreapp2.2/BenoitSilo.dll",
             "args": [],
