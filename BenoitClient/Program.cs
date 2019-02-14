@@ -30,13 +30,11 @@ namespace BenoitClient
             var client = await StartClient();
 
             var options = new RenderingOptions()
-            {
-                FrameWidth = 350,
-                FrameHeight = 200,
-                BatchSize = 2000,
-                BailoutValue = 1 << 12,
-                MaxIteration = 10000
-            };
+                .WithFrameWidth(350)
+                .WithFrameHeight(200)
+                .WithMaxIteration(10000)
+                .WithBailoutValue(1 << 12)
+                .WithBatchSize(2000);
 
             PrintOptions(options);
 
