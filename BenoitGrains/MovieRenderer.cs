@@ -11,7 +11,7 @@ namespace BenoitGrains
     public class MovieRenderer<TExport> : Grain, IMovieRenderer<TExport>
         where TExport : IConvertible
     {
-        public async Task<Immutable<Map2D<TExport>[]>> Render(RenderingOptions options, Complex center, double scale, double scaleMultiplier, int frames)
+        public async Task<Immutable<Map2D<TExport>[]>> Render(RenderingOptions options, Complex center, double scale, double scaleMultiplier, int frames, GrainCancellationToken cancellationToken = null)
         {
             var rendererTasks = new Task<Immutable<Map2D<TExport>>>[frames];
             var currentScale = scale;
@@ -21,13 +21,15 @@ namespace BenoitGrains
             {
                 var renderer = GrainFactory.GetGrain<IFrameRenderer<TExport>>(Guid.NewGuid());
 
-                rendererTasks[i] = renderer.RenderFrame(options, center, currentScale);
+                rendererTasks[i] = renderer.RenderFrame(options, center, currentScale, cancellationToken);
                 currentScale *= scaleMultiplier;
             }
 
             // Wait for the rendering to finish
             var combinedTask = Task.WhenAll(rendererTasks);
             await combinedTask; // TODO: exception handling
+
+            cancellationToken?.CancellationToken.ThrowIfCancellationRequested();
 
             var readyFrames = new Map2D<TExport>[frames];
 

@@ -11,7 +11,7 @@ namespace BenoitGrains
     public class RenderBatch<TExport> : Grain, IRenderBatch<TExport>
         where TExport : IConvertible
     {
-        public Task<Immutable<TExport[]>> Compute(RenderingOptions options, Complex[] coordinates)
+        public Task<Immutable<TExport[]>> Compute(RenderingOptions options, Complex[] coordinates, GrainCancellationToken cancellationToken = null)
         {
             var bailout = options.BailoutValue * options.BailoutValue;
             var maxIteration = options.MaxIteration;
@@ -20,6 +20,9 @@ namespace BenoitGrains
 
             for (int n = 0; n < coordinates.Length; n++)
             {
+                // Kill on request
+                cancellationToken?.CancellationToken.ThrowIfCancellationRequested();
+                
                 var i = 0;
 
                 var newVal = Complex.Zero;

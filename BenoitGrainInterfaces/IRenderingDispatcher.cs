@@ -14,10 +14,10 @@ namespace BenoitGrainInterfaces
         Task<RenderingOptions> GetOptions();
         
         [AlwaysInterleave]
-        Task<bool> BeginRenderFrame(Guid requestIdentifier, Complex center, double scale);
+        Task<bool> BeginRenderFrame(Guid requestIdentifier, Complex center, double scale, GrainCancellationToken cancellationToken = null);
 
         [AlwaysInterleave]
-        Task<bool> BeginRenderMovie(Guid requestIdentifier, Complex center, double scale, double scaleMultiplier, int frames);
+        Task<bool> BeginRenderMovie(Guid requestIdentifier, Complex center, double scale, double scaleMultiplier, int frames, GrainCancellationToken cancellationToken = null);
     
         Task Subscribe(IRenderObserver<TExport> observer);
         Task Unsubscribe(IRenderObserver<TExport> observer);

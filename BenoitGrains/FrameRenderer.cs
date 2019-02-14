@@ -11,7 +11,7 @@ namespace BenoitGrains
     public class FrameRenderer<TExport> : Grain, IFrameRenderer<TExport>
         where TExport : IConvertible
     {
-        public async Task<Immutable<Map2D<TExport>>> RenderFrame(RenderingOptions options, Complex center, double scale)
+        public async Task<Immutable<Map2D<TExport>>> RenderFrame(RenderingOptions options, Complex center, double scale, GrainCancellationToken cancellationToken = null)
         {
             // Prepare a frame to return
             var frame = new Map2D<TExport>(options.FrameWidth, options.FrameHeight);
@@ -32,12 +32,14 @@ namespace BenoitGrains
 
                 var buffer = new Span<Complex>(initialSet, startPoint, count).ToArray();
 
-                batchTasks[i] = newBatch.Compute(options, buffer);
+                batchTasks[i] = newBatch.Compute(options, buffer, cancellationToken);
             }
 
             // Wait for the workers to finish
             var combinedTask = Task.WhenAll(batchTasks); // TODO: exception handling
             await combinedTask;
+
+            cancellationToken?.CancellationToken.ThrowIfCancellationRequested();
 
             // Import the results...
             for (int i = 0; i < batchCount; i++)

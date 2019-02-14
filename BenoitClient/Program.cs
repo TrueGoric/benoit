@@ -49,6 +49,9 @@ namespace BenoitClient
                 SaveFrame($"{guid.ToString()}.png", options, frame.Value);
             };
 
+            var cTokenSource = new GrainCancellationTokenSource();
+            var cToken = cTokenSource.Token;
+
             // Frame options
             var center = new Complex(-0.743643887037158d, 0.131825904205311d);
             var scale = 0.01d;
@@ -63,8 +66,8 @@ namespace BenoitClient
             var observerRef = await client.CreateObjectReference<IRenderObserver<int>>(observer);
             await dispatcher.Subscribe(observerRef);
 
-            //await dispatcher.BeginRenderMovie(Guid.NewGuid(), center, scale, scaleMultiplier, frames);
-            await dispatcher.BeginRenderFrame(Guid.NewGuid(), center, scale);
+            //await dispatcher.BeginRenderMovie(Guid.NewGuid(), center, scale, scaleMultiplier, frames, cToken);
+            await dispatcher.BeginRenderFrame(Guid.NewGuid(), center, scale, cToken);
 
             Console.WriteLine("Awaiting response from the server... (Enter to cancel)");
             Console.ReadLine();

@@ -33,16 +33,16 @@ namespace BenoitGrains
             return Task.FromResult(State);
         }
         
-        public Task<bool> BeginRenderFrame(Guid requestIdentifier, Complex center, double scale)
+        public Task<bool> BeginRenderFrame(Guid requestIdentifier, Complex center, double scale, GrainCancellationToken cancellationToken = null)
         {
-            DispatchRenderFrame(requestIdentifier, center, scale);
+            DispatchRenderFrame(requestIdentifier, center, scale, cancellationToken);
 
             return Task.FromResult(true);
         }
 
-        public Task<bool> BeginRenderMovie(Guid requestIdentifier, Complex center, double scale, double scaleMultiplier, int frames)
+        public Task<bool> BeginRenderMovie(Guid requestIdentifier, Complex center, double scale, double scaleMultiplier, int frames, GrainCancellationToken cancellationToken = null)
         {
-            DispatchRenderMovie(requestIdentifier, center, scale, scaleMultiplier, frames);
+            DispatchRenderMovie(requestIdentifier, center, scale, scaleMultiplier, frames, cancellationToken);
 
             return Task.FromResult(true);
         }
@@ -75,20 +75,20 @@ namespace BenoitGrains
 
         #region Private Dispatcher Methods
 
-        private async Task DispatchRenderFrame(Guid requestIdentifier, Complex center, double scale)
+        private async Task DispatchRenderFrame(Guid requestIdentifier, Complex center, double scale, GrainCancellationToken cancellationToken = null)
         {
             var frameRenderer = GrainFactory.GetGrain<IFrameRenderer<TExport>>(Guid.NewGuid());
 
-            var rendered = await frameRenderer.RenderFrame(State, center, scale);
+            var rendered = await frameRenderer.RenderFrame(State, center, scale, cancellationToken);
 
             _observerManager.Notify(o => o.ReceiveRenderedFrame(requestIdentifier, rendered));
         }
 
-        private async Task DispatchRenderMovie(Guid requestIdentifier, Complex center, double scale, double scaleMultiplier, int frames)
+        private async Task DispatchRenderMovie(Guid requestIdentifier, Complex center, double scale, double scaleMultiplier, int frames, GrainCancellationToken cancellationToken = null)
         {
             var movieRenderer = GrainFactory.GetGrain<IMovieRenderer<TExport>>(Guid.NewGuid());
             
-            var rendered = await movieRenderer.Render(State, center, scale, scaleMultiplier, frames);
+            var rendered = await movieRenderer.Render(State, center, scale, scaleMultiplier, frames, cancellationToken);
 
             _observerManager.Notify(o => o.ReceiveRenderedMovie(requestIdentifier, rendered));
         }
