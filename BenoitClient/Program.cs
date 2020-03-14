@@ -30,13 +30,21 @@ namespace BenoitClient
             var client = await StartClient();
 
             var options = new RenderingOptions()
-                .WithFrameWidth(350)
-                .WithFrameHeight(200)
+                .WithFrameWidth(700)
+                .WithFrameHeight(400)
                 .WithMaxIteration(10000)
-                .WithBailoutValue(1 << 12)
-                .WithBatchSize(2000);
+                .WithBailoutValue(1 << 8)
+                .WithBatchSize(4000);
 
             PrintOptions(options);
+
+            // Frame options
+            var center = new Complex(-0.743643887037158d, 0.131825904205311d);
+            var scale = 0.01d;
+
+            // Zoom options
+            var frames = 400;
+            var scaleMultiplier = 0.90d; // < 1 will magnify, > 1 will zoom out.
 
             var observer = new RenderObserver();
             observer.OnReceivedRenderedMovie += (guid, movie) =>
@@ -52,25 +60,19 @@ namespace BenoitClient
             var cTokenSource = new GrainCancellationTokenSource();
             var cToken = cTokenSource.Token;
 
-            // Frame options
-            var center = new Complex(-0.743643887037158d, 0.131825904205311d);
-            var scale = 0.01d;
-
-            // Zoom options
-            var frames = 200;
-            var scaleMultiplier = 0.8d; // < 1 will magnify, > 1 will zoom out.
-
             var dispatcher = client.GetGrain<IRenderingDispatcher<int>>(Guid.NewGuid());
             await dispatcher.SetOptions(options);
 
             var observerRef = await client.CreateObjectReference<IRenderObserver<int>>(observer);
             await dispatcher.Subscribe(observerRef);
 
-            //await dispatcher.BeginRenderMovie(Guid.NewGuid(), center, scale, scaleMultiplier, frames, cToken);
-            await dispatcher.BeginRenderFrame(Guid.NewGuid(), center, scale, cToken);
+            await dispatcher.BeginRenderMovie(Guid.NewGuid(), center, scale, scaleMultiplier, frames, cToken);
+            //await dispatcher.BeginRenderFrame(Guid.NewGuid(), center, scale, cToken);
 
             Console.WriteLine("Awaiting response from the server... (Enter to cancel)");
             Console.ReadLine();
+
+            await cTokenSource.Cancel();
 
             await client.Close();
         }
